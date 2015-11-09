@@ -23,5 +23,10 @@ public enum AuthenticateProfileResponseStatus {
     /**
      * The specified password hash doesn't match
      */
-    WRONG_PASSWORD
+    WRONG_PASSWORD,
+
+    /**
+     * General error during authentication - usually on either profile or security side
+     */
+    GENERAL_ERROR
 }
