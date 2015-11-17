@@ -6,9 +6,12 @@ import com.tjazi.profiles.messages.GetProfileDetailsByUserNameEmailResponseStatu
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseStatus;
+import com.tjazi.profilesauthorizer.client.ProfilesAuthorizerClient;
+import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseMessage;
+import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseStatus;
 import com.tjazi.security.client.SecurityClient;
 import com.tjazi.security.messages.UserAuthenticationResponseMessage;
-import com.tjazi.security.messages.enums.UserAuthenticationResponseStatus;
+import com.tjazi.security.messages.UserAuthenticationResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
 
     @Autowired
     private SecurityClient securityClient;
+
+    @Autowired
+    private ProfilesAuthorizerClient profilesAuthorizerClient;
 
     @Override
     public AuthenticateProfileResponseMessage authenticateProfile(AuthenticateProfileRequestMessage requestMessage) {
@@ -79,7 +85,6 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
         UserAuthenticationResponseMessage userAuthenticationResult = securityClient.authenticateUser(userProfileUuid, passwordHash);
 
         UserAuthenticationResponseStatus securityAuthenticationStatus = userAuthenticationResult.getAuthenticationResponseStatus();
-        String authorizationToken = userAuthenticationResult.getAuthorizationToken();
 
         if (securityAuthenticationStatus == UserAuthenticationResponseStatus.WRONG_PASSWORD) {
             responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.WRONG_PASSWORD);
@@ -88,10 +93,18 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
         }
 
         if (securityAuthenticationStatus == UserAuthenticationResponseStatus.OK) {
-            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.OK);
-            responseMessage.setAuthorizationToken(authorizationToken);
 
-            return responseMessage;
+            // proceed with creation of the authorization token
+            CreateNewAuthorizationTokenResponseMessage authorizationTokenResultMessage =
+                    profilesAuthorizerClient.createNewAuthorizationToken(userProfileUuid);
+
+            if (authorizationTokenResultMessage.getResponseStatus() == CreateNewAuthorizationTokenResponseStatus.OK) {
+
+                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.OK);
+                responseMessage.setAuthorizationToken(authorizationTokenResultMessage.getAuthorizationToken());
+
+                return responseMessage;
+            }
         }
 
         // if we came as far as here that means we have some general error
@@ -100,6 +113,4 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
 
         return responseMessage;
     }
-
-
 }

@@ -7,9 +7,12 @@ import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessag
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseStatus;
 import com.tjazi.profilesauthenticator.service.core.ProfilesAuthenticatorImpl;
+import com.tjazi.profilesauthorizer.client.ProfilesAuthorizerClient;
+import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseMessage;
+import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseStatus;
 import com.tjazi.security.client.SecurityClient;
 import com.tjazi.security.messages.UserAuthenticationResponseMessage;
-import com.tjazi.security.messages.enums.UserAuthenticationResponseStatus;
+import com.tjazi.security.messages.UserAuthenticationResponseStatus;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,6 +38,9 @@ public class ProfilesAuthenticator_Tests {
 
     @Mock
     public SecurityClient securityClient;
+
+    @Mock
+    public ProfilesAuthorizerClient profilesAuthorizerClient;
 
     @InjectMocks
     public ProfilesAuthenticatorImpl profilesAuthenticator;
@@ -186,8 +192,10 @@ public class ProfilesAuthenticator_Tests {
 
         UserAuthenticationResponseMessage securityUserAuthenticationResponse = new UserAuthenticationResponseMessage();
         securityUserAuthenticationResponse.setAuthenticationResponseStatus(UserAuthenticationResponseStatus.OK);
-        securityUserAuthenticationResponse.setAuthorizationToken(authorizationToken);
-        securityUserAuthenticationResponse.setUserUuid(profileUuid);
+
+        CreateNewAuthorizationTokenResponseMessage createNewAuthorizationTokenResponseMessage = new CreateNewAuthorizationTokenResponseMessage();
+        createNewAuthorizationTokenResponseMessage.setResponseStatus(CreateNewAuthorizationTokenResponseStatus.OK);
+        createNewAuthorizationTokenResponseMessage.setAuthorizationToken(authorizationToken);
 
         // </ messages ment to be sent inside main method by mocks>
 
@@ -201,11 +209,16 @@ public class ProfilesAuthenticator_Tests {
         when(securityClient.authenticateUser(profileUuid, passwordHash))
                 .thenReturn(securityUserAuthenticationResponse);
 
+        when(profilesAuthorizerClient.createNewAuthorizationToken(profileUuid))
+                .thenReturn(createNewAuthorizationTokenResponseMessage);
+
         // main method call
         AuthenticateProfileResponseMessage responseMessage = profilesAuthenticator.authenticateProfile(requestMessage);
 
         // assertion and verification
         verify(profilesClient, times(1)).getProfileDetailsByUserNameEmail(userNameEmail);
+        verify(securityClient, times(1)).authenticateUser(profileUuid, passwordHash);
+        verify(profilesAuthorizerClient, times(1)).createNewAuthorizationToken(profileUuid);
 
         assertEquals(AuthenticateProfileResponseStatus.OK, responseMessage.getResponseStatus());
         assertEquals(authorizationToken, responseMessage.getAuthorizationToken());
