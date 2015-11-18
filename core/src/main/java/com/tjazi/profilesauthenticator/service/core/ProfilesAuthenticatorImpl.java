@@ -15,13 +15,15 @@ import com.tjazi.security.messages.UserAuthenticationResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.print.DocFlavor;
 import java.util.UUID;
 
 /**
  * Created by Krzysztof Wasiak on 08/11/2015.
  */
+
+@Service
 public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
 
     private final static Logger log = LoggerFactory.getLogger(ProfilesAuthenticatorImpl.class);

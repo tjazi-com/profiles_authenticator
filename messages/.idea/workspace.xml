@@ -2,36 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3fd98c0f-3082-4ec8-836e-9845708a12d7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__dom4j_dom4j_1_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__javax_transaction_javax_transaction_api_1_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__mysql_mysql_connector_java_5_1_35.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_apache_tomcat_tomcat_jdbc_8_0_23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_apache_tomcat_tomcat_juli_8_0_23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_aspectj_aspectjrt_1_8_5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_aspectj_aspectjweaver_1_8_5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_hibernate_common_hibernate_commons_annotations_4_0_5_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_hibernate_hibernate_core_4_3_10_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_hibernate_hibernate_entitymanager_4_3_10_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_hibernate_javax_persistence_hibernate_jpa_2_1_api_1_0_0_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_jboss_jandex_1_1_0_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_jboss_logging_jboss_logging_annotations_1_2_0_Beta1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_1_2_4_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_1_2_4_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_1_2_4_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_data_spring_data_commons_1_9_2_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_data_spring_data_jpa_1_7_2_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_spring_aspects_4_1_6_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_spring_jdbc_4_1_6_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_spring_orm_4_1_6_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__org_springframework_spring_tx_4_1_6_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../core/.idea/libraries/Maven__xml_apis_xml_apis_1_0_b2.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../core/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/core.iml" afterPath="$PROJECT_DIR$/../core/core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/pom.xml" afterPath="$PROJECT_DIR$/../core/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/src/main/java/com/tjazi/profilesauthenticator/service/controller/ProfilesAuthenticatorController.java" afterPath="$PROJECT_DIR$/../core/src/main/java/com/tjazi/profilesauthenticator/service/controller/ProfilesAuthenticatorController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java" afterPath="$PROJECT_DIR$/../core/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java" />
     </list>
     <ignored path="profiles-authenticator-messages.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,8 +39,8 @@
       <file leaf-file-name="AuthenticateProfileRequestMessage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/messages/AuthenticateProfileRequestMessage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.12715517">
-              <caret line="5" column="46" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.32112068">
+              <caret line="11" column="32" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -720,12 +691,12 @@
       <workItem from="1446931579537" duration="22000" />
       <workItem from="1446992839353" duration="1289000" />
       <workItem from="1447105844503" duration="108000" />
-      <workItem from="1447768976530" duration="618000" />
+      <workItem from="1447768976530" duration="914000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4084000" />
+    <option name="totallyTimeSpent" value="4380000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="825" extended-state="0" />
@@ -1039,8 +1010,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/messages/AuthenticateProfileRequestMessage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12715517">
-          <caret line="5" column="46" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.32112068">
+          <caret line="11" column="32" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="32" />
           <folding />
         </state>
       </provider>
