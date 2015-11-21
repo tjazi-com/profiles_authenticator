@@ -40,32 +40,11 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
     @Override
     public AuthenticateProfileResponseMessage authenticateProfile(AuthenticateProfileRequestMessage requestMessage) {
 
-        if (requestMessage == null) {
-            String errorMessage = "requestMessage is null";
-
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
-        String userNameEmail = requestMessage.getUserNameEmail();
-
-        if (userNameEmail == null || userNameEmail.isEmpty()) {
-            String errorMessage = "requestMessage.UserNameEmail is null or empty";
-
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
-        String passwordHash = requestMessage.getPasswordHash();
-
-        if (passwordHash == null || passwordHash.isEmpty()) {
-            String errorMessage = "requestMessage.PasswordHash is null or empty";
-
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
+        this.validateRequestMessage(requestMessage);
 
         AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
+
+        String userNameEmail = requestMessage.getUserNameEmail();
 
         GetProfileDetailsByUserNameEmailResponseMessage profileDetailsByUserNameEmail =
                 profilesClient.getProfileDetailsByUserNameEmail(userNameEmail);
@@ -83,6 +62,8 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
         }
 
         UUID userProfileUuid = profileDetailsByUserNameEmail.getProfileUuid();
+
+        String passwordHash = requestMessage.getPasswordHash();
 
         UserAuthenticationResponseMessage userAuthenticationResult = securityClient.authenticateUser(userProfileUuid, passwordHash);
 
@@ -114,5 +95,34 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
         responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.GENERAL_ERROR);
 
         return responseMessage;
+    }
+
+    private void validateRequestMessage(AuthenticateProfileRequestMessage requestMessage) {
+
+        if (requestMessage == null) {
+            String errorMessage = "requestMessage is null";
+
+            log.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        String userNameEmail = requestMessage.getUserNameEmail();
+
+        if (userNameEmail == null || userNameEmail.isEmpty()) {
+            String errorMessage = "requestMessage.UserNameEmail is null or empty";
+
+            log.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        String passwordHash = requestMessage.getPasswordHash();
+
+        if (passwordHash == null || passwordHash.isEmpty()) {
+            String errorMessage = "requestMessage.PasswordHash is null or empty";
+
+            log.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
     }
 }
