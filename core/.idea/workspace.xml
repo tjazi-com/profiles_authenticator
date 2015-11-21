@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4bd0abca-c851-47c5-9356-07abb7e0939e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java" />
     </list>
     <ignored path="profiles-authenticator-core.iws" />
@@ -68,8 +67,8 @@
       <file leaf-file-name="ProfilesAuthenticatorImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.25531915">
-              <caret line="99" column="32" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.44722718">
+              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1073,44 +1072,44 @@
       <workItem from="1447767957491" duration="2413000" />
       <workItem from="1447793640909" duration="3560000" />
       <workItem from="1447864105535" duration="1428000" />
-      <workItem from="1448088382656" duration="741000" />
+      <workItem from="1448088382656" duration="2358000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.17 at 08h 41m 08s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.17 at 09h 25m 24s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.17 at 13h 58m 24s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.18 at 16h 35m 51s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.18 at 16h 40m 33s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.18 at 16h 40m 47s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.18 at 16h 41m 18s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 06h 54m 11s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 06h 57m 07s.xml">
-      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 06h 57m 42s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 06h 59m 58s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 08m 42s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 13m 07s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 16m 05s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 17m 47s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 19m 23s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 22m 01s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 23m 19s.xml">
+      <configuration name="Run all Unit Test cases" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Run_all_Unit_Test_cases - 2015.11.21 at 07h 26m 43s.xml">
       <configuration name="Run all Unit Test cases" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19467000" />
+    <option name="totallyTimeSpent" value="21084000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1123,7 +1122,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="825" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287858" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1133,9 +1132,9 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46521145" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19918145" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19918145" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26251787" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17453505" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1158,13 +1157,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java</url>
-          <line>53</line>
-          <properties />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="1" />
     </breakpoint-manager>
     <watches-manager />
@@ -1599,8 +1591,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tjazi/profilesauthenticator/service/core/ProfilesAuthenticatorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25531915">
-          <caret line="99" column="32" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.44722718">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

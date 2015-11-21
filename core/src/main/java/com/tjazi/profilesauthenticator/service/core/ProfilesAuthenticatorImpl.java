@@ -42,57 +42,70 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
 
         this.validateRequestMessage(requestMessage);
 
+        GetProfileDetailsByUserNameEmailResponseMessage profileDetailsByUserNameEmail =
+                profilesClient.getProfileDetailsByUserNameEmail(requestMessage.getUserNameEmail());
+
+        GetProfileDetailsByUserNameEmailResponseStatus profileDetailsResponse = profileDetailsByUserNameEmail.getResponseStatus();
         AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
 
-        String userNameEmail = requestMessage.getUserNameEmail();
+        switch (profileDetailsResponse) {
+            case PROFILE_NOT_FOUND:
+                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.USER_PROFILE_NOT_FOUND_BY_USER_NAME_OR_EMAIL);
+                return responseMessage;
 
-        GetProfileDetailsByUserNameEmailResponseMessage profileDetailsByUserNameEmail =
-                profilesClient.getProfileDetailsByUserNameEmail(userNameEmail);
+            case GENERAL_ERROR:
+                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.GENERAL_ERROR);
+                return responseMessage;
 
-        if (profileDetailsByUserNameEmail.getResponseStatus() == GetProfileDetailsByUserNameEmailResponseStatus.PROFILE_NOT_FOUND) {
-            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.USER_PROFILE_NOT_FOUND_BY_USER_NAME_OR_EMAIL);
+            case OK:
+                return this.authenticateProfile(
+                        profileDetailsByUserNameEmail.getProfileUuid(),
+                        requestMessage.getPasswordHash());
 
-            return responseMessage;
+            default:
+                String errorMessage = "Got GetProfileDetailsByUserNameEmailResponseStatus of unknown value: " + profileDetailsResponse;
+                log.error(errorMessage);
+                throw new Error(errorMessage);
         }
+    }
 
-        if (profileDetailsByUserNameEmail.getResponseStatus() == GetProfileDetailsByUserNameEmailResponseStatus.GENERAL_ERROR) {
-            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.GENERAL_ERROR);
+    private AuthenticateProfileResponseMessage authenticateProfile(UUID profileUuid, String passwordHash) {
 
-            return responseMessage;
-        }
-
-        UUID userProfileUuid = profileDetailsByUserNameEmail.getProfileUuid();
-
-        String passwordHash = requestMessage.getPasswordHash();
-
-        UserAuthenticationResponseMessage userAuthenticationResult = securityClient.authenticateUser(userProfileUuid, passwordHash);
+        UserAuthenticationResponseMessage userAuthenticationResult = securityClient.authenticateUser(profileUuid, passwordHash);
 
         UserAuthenticationResponseStatus securityAuthenticationStatus = userAuthenticationResult.getAuthenticationResponseStatus();
 
-        if (securityAuthenticationStatus == UserAuthenticationResponseStatus.WRONG_PASSWORD) {
-            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.WRONG_PASSWORD);
+        switch (securityAuthenticationStatus) {
+            case WRONG_PASSWORD:
+                AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
+                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.WRONG_PASSWORD);
+                return responseMessage;
+
+            case OK:
+                return this.createAuthorizationToken(profileUuid);
+
+            default:
+                String errorMessage = "Got UserAuthenticationResponseStatus of unknown value: " + securityAuthenticationStatus;
+                log.error(errorMessage);
+                throw new Error(errorMessage);
+        }
+    }
+
+    private AuthenticateProfileResponseMessage createAuthorizationToken(UUID profileUuid) {
+
+        AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
+
+        // proceed with creation of the authorization token
+        CreateNewAuthorizationTokenResponseMessage authorizationTokenResultMessage =
+                profilesAuthorizerClient.createNewAuthorizationToken(profileUuid);
+
+        if (authorizationTokenResultMessage.getResponseStatus() == CreateNewAuthorizationTokenResponseStatus.OK) {
+
+            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.OK);
+            responseMessage.setAuthorizationToken(authorizationTokenResultMessage.getAuthorizationToken());
 
             return responseMessage;
         }
-
-        if (securityAuthenticationStatus == UserAuthenticationResponseStatus.OK) {
-
-            // proceed with creation of the authorization token
-            CreateNewAuthorizationTokenResponseMessage authorizationTokenResultMessage =
-                    profilesAuthorizerClient.createNewAuthorizationToken(userProfileUuid);
-
-            if (authorizationTokenResultMessage.getResponseStatus() == CreateNewAuthorizationTokenResponseStatus.OK) {
-
-                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.OK);
-                responseMessage.setAuthorizationToken(authorizationTokenResultMessage.getAuthorizationToken());
-
-                return responseMessage;
-            }
-        }
-
-        // if we came as far as here that means we have some general error
-        log.error("Unexpected code flow. This line shouldn't be called.");
-        responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.GENERAL_ERROR);
 
         return responseMessage;
     }
