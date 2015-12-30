@@ -1,7 +1,6 @@
 package com.tjazi.profilesauthenticator.service.controller;
 
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
 import com.tjazi.profilesauthenticator.service.core.ProfilesAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/profilesauthenticator")
+@RequestMapping(value = "/authenticator")
 public class ProfilesAuthenticatorController {
 
     private static final Logger log = LoggerFactory.getLogger(ProfilesAuthenticatorController.class);
@@ -24,8 +23,9 @@ public class ProfilesAuthenticatorController {
     @Autowired
     private ProfilesAuthenticator profilesAuthenticator;
 
-    @RequestMapping(value = "/authenticateprofile", method = RequestMethod.POST)
-    public AuthenticateProfileResponseMessage authenticateProfile(
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+
+    public String authenticateProfile(
             @RequestBody AuthenticateProfileRequestMessage authenticateProfileRequestMessage) {
 
         if (authenticateProfileRequestMessage == null) {

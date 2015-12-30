@@ -4,14 +4,8 @@ import com.tjazi.profiles.client.ProfilesClient;
 import com.tjazi.profiles.messages.GetProfileDetailsByUserNameEmailResponseMessage;
 import com.tjazi.profiles.messages.GetProfileDetailsByUserNameEmailResponseStatus;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseStatus;
 import com.tjazi.profilesauthorizer.client.ProfilesAuthorizerClient;
-import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseMessage;
-import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseStatus;
 import com.tjazi.security.client.SecurityClient;
-import com.tjazi.security.messages.UserAuthenticationResponseMessage;
-import com.tjazi.security.messages.UserAuthenticationResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,85 +32,53 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
     private ProfilesAuthorizerClient profilesAuthorizerClient;
 
     @Override
-    public AuthenticateProfileResponseMessage authenticateProfile(AuthenticateProfileRequestMessage requestMessage) {
+    public String authenticateProfile(AuthenticateProfileRequestMessage requestMessage) {
 
-        this.validateRequestMessage(requestMessage);
+        this.assertRequestMessage(requestMessage);
 
         GetProfileDetailsByUserNameEmailResponseMessage profileDetailsByUserNameEmail =
                 profilesClient.getProfileDetailsByUserNameEmail(requestMessage.getUserNameEmail());
 
         GetProfileDetailsByUserNameEmailResponseStatus profileDetailsResponse = profileDetailsByUserNameEmail.getResponseStatus();
-        AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
 
-        switch (profileDetailsResponse) {
-            case PROFILE_NOT_FOUND:
-                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.USER_PROFILE_NOT_FOUND_BY_USER_NAME_OR_EMAIL);
-                return responseMessage;
-
-            case GENERAL_ERROR:
-                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.GENERAL_ERROR);
-                return responseMessage;
-
-            case OK:
-                return this.authenticateProfile(
-                        profileDetailsByUserNameEmail.getProfileUuid(),
-                        requestMessage.getPasswordHash());
-
-            default:
-                String errorMessage = "Got GetProfileDetailsByUserNameEmailResponseStatus of unknown value: " + profileDetailsResponse;
-                log.error(errorMessage);
-                throw new Error(errorMessage);
-        }
-    }
-
-    private AuthenticateProfileResponseMessage authenticateProfile(UUID profileUuid, String passwordHash) {
-
-        UserAuthenticationResponseMessage userAuthenticationResult = securityClient.authenticateUser(profileUuid, passwordHash);
-
-        UserAuthenticationResponseStatus securityAuthenticationStatus = userAuthenticationResult.getAuthenticationResponseStatus();
-
-        switch (securityAuthenticationStatus) {
-            case WRONG_PASSWORD:
-                AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
-                responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.WRONG_PASSWORD);
-                return responseMessage;
-
-            case OK:
-                return this.createAuthorizationToken(profileUuid);
-
-            default:
-                String errorMessage = "Got UserAuthenticationResponseStatus of unknown value: " + securityAuthenticationStatus;
-                log.error(errorMessage);
-                throw new Error(errorMessage);
-        }
-    }
-
-    private AuthenticateProfileResponseMessage createAuthorizationToken(UUID profileUuid) {
-
-        AuthenticateProfileResponseMessage responseMessage = new AuthenticateProfileResponseMessage();
-
-        // proceed with creation of the authorization token
-        CreateNewAuthorizationTokenResponseMessage authorizationTokenResultMessage =
-                profilesAuthorizerClient.createNewAuthorizationToken(profileUuid);
-
-        if (authorizationTokenResultMessage.getResponseStatus() == CreateNewAuthorizationTokenResponseStatus.OK) {
-
-            responseMessage.setResponseStatus(AuthenticateProfileResponseStatus.OK);
-            responseMessage.setAuthorizationToken(authorizationTokenResultMessage.getAuthorizationToken());
-
-            return responseMessage;
+        if (profileDetailsResponse != GetProfileDetailsByUserNameEmailResponseStatus.OK) {
+            log.error("Got {} status from the profiles-core service; reporting authentication process as failed", profileDetailsResponse);
+            return null;
         }
 
-        return responseMessage;
+        UUID profileUuid = profileDetailsByUserNameEmail.getProfileUuid();
+
+        boolean authenticationResult =
+                securityClient.authenticateUser(profileUuid, requestMessage.getPasswordHash());
+
+        if (!authenticationResult) {
+            log.error("Authentication at security-service-core has failed; reporting authentication process as failed");
+            return null;
+        }
+
+        String authorizationToken = this.generateAuthorizationToken();
+
+        // stage 3: save authorization token
+        boolean authorizationTokenPersistenceResult =
+                profilesAuthorizerClient.saveAuthorizationToken(profileUuid, authorizationToken);
+
+        if (!authorizationTokenPersistenceResult) {
+            log.error("Persistence of the authorization token has failed; reporting authentication process as failed");
+            return null;
+        }
+
+        log.debug("Authentication process for profile UUID: {} succeeded; new authorization token: {}",
+                profileUuid, authorizationToken);
+        return authorizationToken;
     }
 
-    private void validateRequestMessage(AuthenticateProfileRequestMessage requestMessage) {
+    private void assertRequestMessage(AuthenticateProfileRequestMessage requestMessage) {
 
         if (requestMessage == null) {
             String errorMessage = "requestMessage is null";
 
             log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            throw new AssertionError(errorMessage);
         }
 
         String userNameEmail = requestMessage.getUserNameEmail();
@@ -125,7 +87,7 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
             String errorMessage = "requestMessage.UserNameEmail is null or empty";
 
             log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            throw new AssertionError(errorMessage);
         }
 
         String passwordHash = requestMessage.getPasswordHash();
@@ -134,8 +96,11 @@ public class ProfilesAuthenticatorImpl implements ProfilesAuthenticator {
             String errorMessage = "requestMessage.PasswordHash is null or empty";
 
             log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            throw new AssertionError(errorMessage);
         }
+    }
 
+    private String generateAuthorizationToken() {
+        return UUID.randomUUID().toString();
     }
 }

@@ -1,10 +1,9 @@
 package com.tjazi.profilesauthenticator.client;
 
-import com.tjazi.lib.messaging.rest.RestClient;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by Krzysztof Wasiak on 07/11/2015.
@@ -13,22 +12,16 @@ public class ProfilesAuthenticatorClientImpl implements ProfilesAuthenticatorCli
 
     private final static Logger log = LoggerFactory.getLogger(ProfilesAuthenticatorClientImpl.class);
 
-    private RestClient restClient;
+    private RestTemplate restTemplate;
 
-    public ProfilesAuthenticatorClientImpl(RestClient restClient) {
-
-        if (restClient == null) {
-            String errorMessage = "restClient is null";
-
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
-        this.restClient = restClient;
-    }
+    private final static String PROFILES_AUTHENTICATOR_SERVICE_NAME = "profiles-authenticator-service-core";
+    private final static String AUTHENTICATE_PROFILE_PATH = "http://" + PROFILES_AUTHENTICATOR_SERVICE_NAME + "/authenticator/authenticate";
 
     @Override
-    public AuthenticateProfileResponseMessage authenticateProfile(String userNameEmail, String passwordHash) {
+    public String authenticateProfile(String userNameEmail, String passwordHash) {
+
+        log.debug("[ProfilesAuthenticatorClient] Got Authenticate Profile request. userNameEmail: '{}', passwordHash: '{}'",
+                userNameEmail, passwordHash);
 
         if (userNameEmail == null || userNameEmail.isEmpty()) {
             String errorMessage = "userNameEmail is null or empty";
@@ -48,7 +41,7 @@ public class ProfilesAuthenticatorClientImpl implements ProfilesAuthenticatorCli
         requestMessage.setUserNameEmail(userNameEmail);
         requestMessage.setPasswordHash(passwordHash);
 
-        return (AuthenticateProfileResponseMessage) restClient.sendRequestGetResponse(
-                requestMessage, AuthenticateProfileResponseMessage.class);
+        return restTemplate.postForObject(AUTHENTICATE_PROFILE_PATH,
+                requestMessage, String.class, (Object) null);
     }
 }

@@ -4,27 +4,23 @@ import com.tjazi.profiles.client.ProfilesClient;
 import com.tjazi.profiles.messages.GetProfileDetailsByUserNameEmailResponseMessage;
 import com.tjazi.profiles.messages.GetProfileDetailsByUserNameEmailResponseStatus;
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseStatus;
 import com.tjazi.profilesauthenticator.service.core.ProfilesAuthenticatorImpl;
 import com.tjazi.profilesauthorizer.client.ProfilesAuthorizerClient;
-import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseMessage;
-import com.tjazi.profilesauthorizer.messages.CreateNewAuthorizationTokenResponseStatus;
 import com.tjazi.security.client.SecurityClient;
-import com.tjazi.security.messages.UserAuthenticationResponseMessage;
-import com.tjazi.security.messages.UserAuthenticationResponseStatus;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by Krzysztof Wasiak on 08/11/2015.
@@ -50,14 +46,14 @@ public class ProfilesAuthenticator_Tests {
 
     @Test
     public void authenticateProfile_ExceptionOnNullInputMessage_Test() {
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(AssertionError.class);
 
         profilesAuthenticator.authenticateProfile(null);
     }
 
     @Test
     public void authenticateProfile_ExceptionOnNullUserNameEmail_Test() {
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(AssertionError.class);
         thrown.expectMessage("requestMessage.UserNameEmail is null or empty");
 
         AuthenticateProfileRequestMessage requestMessage = new AuthenticateProfileRequestMessage();
@@ -69,7 +65,7 @@ public class ProfilesAuthenticator_Tests {
 
     @Test
     public void authenticateProfile_ExceptionOnNullPasswordHash_Test() {
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(AssertionError.class);
         thrown.expectMessage("requestMessage.PasswordHash is null or empty");
 
         AuthenticateProfileRequestMessage requestMessage = new AuthenticateProfileRequestMessage();
@@ -98,14 +94,12 @@ public class ProfilesAuthenticator_Tests {
                 .thenReturn(profileResponseMessage);
 
         // main method call
-        AuthenticateProfileResponseMessage responseMessage = profilesAuthenticator.authenticateProfile(requestMessage);
+        String response = profilesAuthenticator.authenticateProfile(requestMessage);
 
         // assertion and verification
         verify(profilesClient, times(1)).getProfileDetailsByUserNameEmail(userNameEmail);
 
-        assertEquals(AuthenticateProfileResponseStatus.USER_PROFILE_NOT_FOUND_BY_USER_NAME_OR_EMAIL,
-                responseMessage.getResponseStatus());
-        assertNull(responseMessage.getAuthorizationToken());
+        assertNull(response);
     }
 
     @Test
@@ -127,18 +121,16 @@ public class ProfilesAuthenticator_Tests {
                 .thenReturn(profileResponseMessage);
 
         // main method call
-        AuthenticateProfileResponseMessage responseMessage = profilesAuthenticator.authenticateProfile(requestMessage);
+        String response = profilesAuthenticator.authenticateProfile(requestMessage);
 
         // assertion and verification
         verify(profilesClient, times(1)).getProfileDetailsByUserNameEmail(userNameEmail);
 
-        assertEquals(AuthenticateProfileResponseStatus.GENERAL_ERROR,
-                responseMessage.getResponseStatus());
-        assertNull(responseMessage.getAuthorizationToken());
+        assertNull(response);
     }
 
     @Test
-    public void authenticateProfile_RequestProfileData_GotSingleProfile_WrongPassword_Test() {
+    public void authenticateProfile_RequestProfileData_GotSingleProfile_AuthenticationFailed_Test() {
 
         final String userNameEmail = "sample user name / email";
         final String passwordHash = "sample password hash";
@@ -150,9 +142,6 @@ public class ProfilesAuthenticator_Tests {
         profileResponseMessage.setProfileUuid(profileUuid);
         profileResponseMessage.setResponseStatus(GetProfileDetailsByUserNameEmailResponseStatus.OK);
 
-        UserAuthenticationResponseMessage securityUsertAuthenticationResponse = new UserAuthenticationResponseMessage();
-        securityUsertAuthenticationResponse.setAuthenticationResponseStatus(UserAuthenticationResponseStatus.WRONG_PASSWORD);
-
         // </ messages ment to be sent inside main method by mocks>
 
         AuthenticateProfileRequestMessage requestMessage = new AuthenticateProfileRequestMessage();
@@ -163,17 +152,15 @@ public class ProfilesAuthenticator_Tests {
                 .thenReturn(profileResponseMessage);
 
         when(securityClient.authenticateUser(profileUuid, passwordHash))
-                .thenReturn(securityUsertAuthenticationResponse);
+                .thenReturn(false);
 
         // main method call
-        AuthenticateProfileResponseMessage responseMessage = profilesAuthenticator.authenticateProfile(requestMessage);
+        String response = profilesAuthenticator.authenticateProfile(requestMessage);
 
         // assertion and verification
         verify(profilesClient, times(1)).getProfileDetailsByUserNameEmail(userNameEmail);
 
-        assertEquals(AuthenticateProfileResponseStatus.WRONG_PASSWORD,
-                responseMessage.getResponseStatus());
-        assertNull(responseMessage.getAuthorizationToken());
+        assertNull(response);
     }
 
     @Test
@@ -182,20 +169,12 @@ public class ProfilesAuthenticator_Tests {
         final String userNameEmail = "sample user name / email";
         final String passwordHash = "sample password hash";
         final UUID profileUuid = UUID.randomUUID();
-        final String authorizationToken = UUID.randomUUID().toString();
 
         // messages ment to be sent insite main method by mocks
         final GetProfileDetailsByUserNameEmailResponseMessage profileResponseMessage =
                 new GetProfileDetailsByUserNameEmailResponseMessage();
         profileResponseMessage.setProfileUuid(profileUuid);
         profileResponseMessage.setResponseStatus(GetProfileDetailsByUserNameEmailResponseStatus.OK);
-
-        UserAuthenticationResponseMessage securityUserAuthenticationResponse = new UserAuthenticationResponseMessage();
-        securityUserAuthenticationResponse.setAuthenticationResponseStatus(UserAuthenticationResponseStatus.OK);
-
-        CreateNewAuthorizationTokenResponseMessage createNewAuthorizationTokenResponseMessage = new CreateNewAuthorizationTokenResponseMessage();
-        createNewAuthorizationTokenResponseMessage.setResponseStatus(CreateNewAuthorizationTokenResponseStatus.OK);
-        createNewAuthorizationTokenResponseMessage.setAuthorizationToken(authorizationToken);
 
         // </ messages ment to be sent inside main method by mocks>
 
@@ -207,20 +186,23 @@ public class ProfilesAuthenticator_Tests {
                 .thenReturn(profileResponseMessage);
 
         when(securityClient.authenticateUser(profileUuid, passwordHash))
-                .thenReturn(securityUserAuthenticationResponse);
+                .thenReturn(true);
 
-        when(profilesAuthorizerClient.createNewAuthorizationToken(profileUuid))
-                .thenReturn(createNewAuthorizationTokenResponseMessage);
+        when(profilesAuthorizerClient.saveAuthorizationToken(eq(profileUuid), any(String.class)))
+                .thenReturn(true);
 
         // main method call
-        AuthenticateProfileResponseMessage responseMessage = profilesAuthenticator.authenticateProfile(requestMessage);
+        String responseAuthorizationToken = profilesAuthenticator.authenticateProfile(requestMessage);
 
         // assertion and verification
         verify(profilesClient, times(1)).getProfileDetailsByUserNameEmail(userNameEmail);
         verify(securityClient, times(1)).authenticateUser(profileUuid, passwordHash);
-        verify(profilesAuthorizerClient, times(1)).createNewAuthorizationToken(profileUuid);
 
-        assertEquals(AuthenticateProfileResponseStatus.OK, responseMessage.getResponseStatus());
-        assertEquals(authorizationToken, responseMessage.getAuthorizationToken());
+        ArgumentCaptor<String> authorizationTokenCaptore = ArgumentCaptor.forClass(String.class);
+
+        verify(profilesAuthorizerClient, times(1)).saveAuthorizationToken(eq(profileUuid), authorizationTokenCaptore.capture());
+
+        // make sure authorization token, which has been sent to database and the one returned are the same
+        assertEquals(authorizationTokenCaptore.getValue(), responseAuthorizationToken);
     }
 }

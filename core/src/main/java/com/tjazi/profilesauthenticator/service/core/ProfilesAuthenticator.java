@@ -1,7 +1,6 @@
 package com.tjazi.profilesauthenticator.service.core;
 
 import com.tjazi.profilesauthenticator.messages.AuthenticateProfileRequestMessage;
-import com.tjazi.profilesauthenticator.messages.AuthenticateProfileResponseMessage;
 
 /**
  * Created by Krzysztof Wasiak on 08/11/2015.
@@ -13,7 +12,7 @@ public interface ProfilesAuthenticator {
     /**
      * Authenticate profile specified in the given message
      * @param requestMessage authentication request message
-     * @return Authentication status
+     * @return Authorization token (null - if authorization has failed)
      */
-    AuthenticateProfileResponseMessage authenticateProfile(AuthenticateProfileRequestMessage requestMessage);
+    String authenticateProfile(AuthenticateProfileRequestMessage requestMessage);
 }
